@@ -3,72 +3,79 @@ import sys
 import random
 import math
 import numpy as np
-np.random.seed(238)
-random.seed(238)
-pygame.init()
 
-screen=pygame.display.set_mode((1000,1000))
-pygame.display.update()
+#np.random.seed(238)
+#random.seed(238)
 
-screen.fill((0,0,0))
-pygame.display.update()
 
-square = pygame.draw.rect(screen,(255,255,255), 
-			(320,240,100,100),5)
-
-class Player: 
-	def __init__(self):
-		self.location = None
-		self.actions = [0,1,2,3] #up down left right
-	def move(self):
-		pass
-class Grid: 
-	def __init__(self, num_traps):
-		self.screen_x, self.screen_y = screen.get_size()
-		self.num_squares = 100
-		self.positions = np.zeros([10,10])
-		self.num_traps = num_traps
-	def model_screen(self): 
-		trap_positions = np.random.choice(100, self.num_traps)
-		goal_positions = 
-		count = 0
-		for position in self.positions:
-			for square in position:
-
-				square =
-				count += 1
-class Square: 
-	def __init__(self, size):
-		self.Q_value = None
-		self.reward = None
-		self.type = None
+class Grid:
+	def __init__(self, trap_num, size):
+		self.map = np.zeros([size,size]) #size will be 8
+		self.normal_square = 0
+		self.bad_square = 1
+		self.goal_square = 2
+		self.trap_num = trap_num
 		self.size = size
-	def make_normal(self, x, y):
-		self.type = 0
-		self.reward = 10
-		pygame.draw.rect(screen,(0,0,0), 
-			(x,y,self.size,self.size),0)
-	def make_trap(self, x, y):
-		self.type = 1
-		self.reward = -100
-		pygame.draw.rect(screen,(255,0,0), 
-			(x,y,self.size,self.size),0)
-	def make_goal(self, x, y):
-		self.type = 2
-		self.reward = 100
-		pygame.draw.rect(screen,(0,255,0), 
-			(x,y,self.size,self.size),0)
-class GameRunner: 
- 	def __init__(self):
- 		pass
-test = Grid(3)
-test.model_screen()
+
+	def makeGrid(self):
+		trap_x_count = 0
+		goal_count = 0
+		while not goal_count == 1:
+			for y in range(0,self.map.shape[0]):
+				trap_x_count = 0
+				for x in range(0,self.map.shape[1]):
+					rand = random.randint(0,100)
+					if rand < 30 and self.map[y,x] == 0 and trap_x_count < 2:
+						self.map[y,x] = self.bad_square
+						trap_x_count += 1
+					if rand > 90 and self.map[y,x] == 0 and goal_count == 0 and y > 3:
+						self.map[y,x] = self.goal_square
+						goal_count +=1
+				
+class Player:
+	def __init__(self, grid):
+		self.grid = grid
+		self.position = np.zeros([2])
+		self.state = None
+		self.position[0] = int(self.grid.size/2)
+		self.position[1] = int(self.grid.size/2)
+	def do_action(self, action): # up down left right 0 1 2 3
+		self.game_state()
+		if action == 0: 
+			self.position[0] -= 1
+		if action == 1:
+			self.position[0] += 1
+		if action == 2: 
+			self.position[1] -= 1
+		if action == 3:
+			self.position[1] += 1	
+			
+	def game_state(self) 
+		state = grid[position[0], position[1]]
+		reward = 0
+		if state == 1:
+ 			reward -100
+			self.reset()
+		if state == 2:
+			reward +100
+			self.reset()
+		if state == 0:
+			reward +10
+		return reward
+
+	def reset(self):
+		self.position[0] = int(self.grid.size/2)
+		self.position[1] = int(self.grid.size/2) 
+
+	def get_info(self):
+		pass		
 
 
-while True:
 
-	pygame.display.update()
-	for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
+if __name__ == "__main__":
+	grid = Grid(18,9)
+	grid.makeGrid()
+	print(grid.map)
+	player = Player(grid)
+	player.do_action(3)
+	print(player.position)
