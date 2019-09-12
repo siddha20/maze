@@ -4,8 +4,8 @@ import random
 import math
 import numpy as np
 
-#np.random.seed(238)
-#random.seed(238)
+np.random.seed(238)
+random.seed(299)
 
 
 class Grid:
@@ -31,16 +31,19 @@ class Grid:
 					if rand > 90 and self.map[y,x] == 0 and goal_count == 0 and y > 3:
 						self.map[y,x] = self.goal_square
 						goal_count +=1
-				
+
 class Player:
 	def __init__(self, grid):
 		self.grid = grid
 		self.position = np.zeros([2])
 		self.state = None
+		self.latest_reward = None
 		self.position[0] = int(self.grid.size/2)
 		self.position[1] = int(self.grid.size/2)
+		self.done = False
+		self.update_state()
+
 	def do_action(self, action): # up down left right 0 1 2 3
-		self.game_state()
 		if action == 0: 
 			self.position[0] -= 1
 		if action == 1:
@@ -49,33 +52,47 @@ class Player:
 			self.position[1] -= 1
 		if action == 3:
 			self.position[1] += 1	
-			
-	def game_state(self) 
-		state = grid[position[0], position[1]]
+		self.latest_reward = self.update_state()
+
+	def update_state(self):
+		self.state = grid.map[int(self.position[0]), int(self.position[1])]
 		reward = 0
-		if state == 1:
- 			reward -100
+		if self.state == 1:
+ 			reward = -100
+ 			self.done = True
+ 			self.reset()
+		if self.state == 2:
+			reward = 100
+			self.done = True
 			self.reset()
-		if state == 2:
-			reward +100
-			self.reset()
-		if state == 0:
-			reward +10
+		if self.state == 0:
+			reward = 10
 		return reward
 
 	def reset(self):
 		self.position[0] = int(self.grid.size/2)
-		self.position[1] = int(self.grid.size/2) 
+		self.position[1] = int(self.grid.size/2)
+		self.done = False 
 
 	def get_info(self):
-		pass		
-
-
+		return(self.state, self.latest_reward, self.position, self.done)		
 
 if __name__ == "__main__":
 	grid = Grid(18,9)
 	grid.makeGrid()
 	print(grid.map)
 	player = Player(grid)
-	player.do_action(3)
-	print(player.position)
+	player.reset()
+	count = 0
+	while True:
+		print(count)
+		player.do_action(3)
+		state, reward, position, done = player.get_info()
+		print(state, reward, position, done)
+		if player.done:
+			break
+		count += 1
+
+	
+
+
