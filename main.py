@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 np.random.seed(238)
-random.seed(299)
+#random.seed(299)
 
 
 class Game: 
@@ -27,6 +27,14 @@ class Game:
 		self.state =  self.grid.map[int(self.position[0]), int(self.position[1])]
 		return self.state
 	def action_state(self, action):
+		if int(self.position[1]) == (self.grid.size - 1) and action == 3:
+			return 
+		if int(self.position[1]) == 0 and action == 2:
+			return 
+		if int(self.position[0]) == 0 and action == 0:
+			return 
+		if int(self.position[0]) == (self.grid.size - 1) and action == 1:
+			return 
 		self.player.update_position(self.player.do_action(action))
 		self.update_state()
 		self.update_reward()
@@ -115,7 +123,7 @@ if __name__ == "__main__":
 				print('left')
 			if action == 3:
 				print('right')
-			game.action_state(random)
+			game.action_state(action)
 			state, reward, done, player_position = game.get_info()
 			print(player_position)
 			print(reward)
