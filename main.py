@@ -3,9 +3,14 @@ import sys
 import random
 import math
 import numpy as np
+import time
 
 np.random.seed(238)
 #random.seed(299)
+
+'''
+For the render portion of the game, a square class will be made and a render map class will be made.
+'''
 
 
 class Game: 
@@ -54,7 +59,6 @@ class Game:
 		self.done = True
 	def get_info(self):
 		return (self.state, self.reward, self.done, self.grid.model_player(self.position))
-
 class Grid:
 	def __init__(self, max_trap_per_row, size):
 		self.map = np.zeros([size,size]) #size will be 8
@@ -63,7 +67,6 @@ class Grid:
 		self.goal_square = 2
 		self.size = size
 		self.max_trap_per_row = max_trap_per_row
-
 	def makeGrid(self):
 		trap_x_count = 0
 		goal_count = 0
@@ -82,6 +85,51 @@ class Grid:
 		map_copy = np.copy(self.map)
 		map_copy[int(position[0]), int(position[1])] = 99
 		return map_copy
+class RenderedGrid: 
+	def __init__(self, screen, model_player):
+		self.screen = screen
+		self.model = model_player
+		self.size = int(np.shape(self.model)[0]
+		self.render_grid = np.ndarray(shape=[self.size, self.size], dtype=object))
+			for y in range(0,self.size):
+				for x in range(0,self.size):
+					render_grid[y,x] = Square()
+	def makeRender(self, state): #needs to be run once to start the picture. 
+		for y in range(0,self.size):
+				for x in range(0,self.size):
+					if state == 0:
+						color = (255,255,255)
+					if state == 1:
+						color = (255,0,0)
+					if state == 2:
+						color = (0,255,0)
+					render_grid[y,x].makeSquare(100, (100*x,y*100), color)
+
+	def frame_change(self): #needs to be done after a action to update the frame
+
+	
+
+					
+class Square:
+	def __init__(self, screen):
+		self.size = None
+		self.fill = 0
+		self.square = None	
+		self.position = np.zeros([2])
+		self.color = None
+		self.screen = screen
+
+	def makeSquare(self, size, position, color)
+		self.square = pygame.draw.rect(self.screen, color, (int(position[0]),int(position[1]),size,size), self.fill)
+		self.position[0] = position[0]
+		self.position[1] = position[1]
+		self.color = color
+		self.size = size
+	def change_color(self, color):
+		self.square = pygame.draw.rect(self.screen, color, (int(self.position[0]),int(self.position[1]),self.size,self.size), self.fill)
+	def change_position(self, position):
+		self.square = pygame.draw.rect(self.screen, color, (int(position[0]),int(position[1]),self.size,self.size), self.fill)
+
 
 class Player:
 	def __init__(self):
@@ -112,6 +160,9 @@ if __name__ == "__main__":
 	player = Player()
 	game = Game(grid, player)
 	steps = 0
+	screen=pygame.display.set_mode((900,900))
+	screen.fill((255,255,255))
+	pygame.display.update()
 	for i in range(0,1):
 		steps = 0
 		game.re_init()
@@ -129,11 +180,18 @@ if __name__ == "__main__":
 				print('left')
 			if action == 3:
 				print('right')
+			#game.render(screen)
 			game.action_state(action)
+			pygame.display.update()
 			state, reward, done, player_position = game.get_info()
 			steps += 1
 			print(player_position)
 			print(reward)
+			#time.sleep(3)
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					pygame.quit()
+					exit()
 
 
 
