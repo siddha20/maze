@@ -1,3 +1,6 @@
+import random
+import numpy as np
+# integrate frames/steps into game
 class Game: 
 	def __init__(self, grid, player):
 		self.grid = grid

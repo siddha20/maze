@@ -1,3 +1,5 @@
+import random
+import numpy as np
 class Grid:
 	def __init__(self, max_trap_per_row, size):
 		self.map = np.zeros([size,size]) #size will be 8
