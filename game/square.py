@@ -19,5 +19,5 @@ class Square:
 		self.square = pygame.draw.rect(self.screen, color, (int(self.position[0]),int(self.position[1]),self.size,self.size), self.fill)
 		self.color = color
 	def change_position(self, position):
-		self.square = pygame.draw.rect(self.screen, color, (int(position[0]),int(position[1]),self.size,self.size), self.fill)
+		self.square = pygame.draw.rect(self.screen, self.color, (int(position[0]),int(position[1]),self.size,self.size), self.fill)
 		self.position = position
