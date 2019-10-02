@@ -2,7 +2,7 @@ import random
 import numpy as np
 # integrate frames/steps into game
 class Game: 
-	def __init__(self, grid, player, render, square_size=100, frame_limit=None, rendered=True):
+	def __init__(self, grid, player, render, square_size=100, frame_limit=75, rendered=True):
 		self.grid = grid
 		self.player = player
 		self.position = np.zeros([2])

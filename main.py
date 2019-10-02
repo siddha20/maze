@@ -1,7 +1,7 @@
-from grid import Grid
-from player import Player
-from game import Game
-from rendered_grid import RenderedGrid
+from game.grid import Grid
+from game.player import Player
+from game.game import Game
+from game.rendered_grid import RenderedGrid
 
 import pygame
 import numpy as np
@@ -13,21 +13,20 @@ import time
 if __name__ == "__main__":
 	render = RenderedGrid()
 	traps = 0
-	size = 129
+	size = 9
 	grid = Grid(traps, size)
 	grid.makeGrid()
 	print(grid.map)
 
-	game = Game(grid, Player(), RenderedGrid(), 9)
+	game = Game(grid, Player(), RenderedGrid(), 30)
 
 	
 
 	pygame.display.update()
-	for i in range(0,1):
+	for i in range(0,99):
 		game.re_init()
 		while True:
 			if game.done:
-				time.sleep(10)
 				break
 			action = random.randint(0,3)
 			if action == 0:

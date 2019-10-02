@@ -1,4 +1,4 @@
-from square import Square
+from game.square import Square
 import numpy as np
 import pygame
 class RenderedGrid: 
