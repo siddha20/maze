@@ -24,11 +24,14 @@ class RenderedGrid:
 				if state == 99: #player
 					color = (122,122,0)
 				self.render_grid[y,x].makeSquare(self.square_size, (self.square_size*x,y*self.square_size), color)
+		pygame.display.update()
 	def update_frame(self, cur_pos, color_list):
 		color = (color_list[2], color_list[0], color_list[1])
 		self.render_grid[int(cur_pos[0]),int(cur_pos[1])].change_color(color)
+		pygame.display.update()
 	def set_variables(self, trap_num, square_size): #needs to be done after a action to update the frame
 		self.square_size = square_size
 		self.screen_size = trap_num * self.square_size
 		self.screen=pygame.display.set_mode((self.screen_size,self.screen_size))
 		self.screen.fill((255,255,255))
+		pygame.display.update()
