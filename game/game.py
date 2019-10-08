@@ -18,6 +18,8 @@ class Game:
 		self.frame_limit = frame_limit
 		self.render.set_variables((int(self.grid.size)), square_size)
 		self.color = [0,200,0]
+		self.num_actions = 4
+		self.num_states = self.grid.size*self.grid.size
 	def re_init(self): #needs to be called after game over 
 		self.done = False
 		self.frame = 0
@@ -54,7 +56,7 @@ class Game:
 		
 
 			self.render.update_frame(self.position, self.color)
-		print("frame: ", self.frame, "color: ", self.color )
+		#print("frame: ", self.frame, "color: ", self.color )
 	def update_reward(self):
 		if self.frame == self.frame_limit:
 			self.game_over() 
@@ -71,7 +73,7 @@ class Game:
 	def game_over(self):
 		self.done = True
 	def get_info(self):
-		return (self.state, self.reward, self.done, self.grid.model_player(self.position))
+		return (self.state, self.reward, self.done, self.grid.model_player(self.position), int(self.player.position[0]), int(self.player.position[1]))
 	def frame_update(self, model):
 		if(self.frame == 1):
 			#do the frame init for render	
